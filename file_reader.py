@@ -8,12 +8,12 @@ class file_reader():
     def __init__(self):
         self.descriptor = test_descriptor.test_desciptor()
 
-    def top5_check(self, dict, score):
+    def top_score_check(self, dict, score):
         for idx, val in dict:
             if val < score: return True
         return False
 
-    def top5_Classifier(self, top5, label):
+    def score_Classifier(self, top5, label):
         print(label, 'top 5: ', top5[:, 0])
         if label in top5[:, 0]:
             print('case1 = true')
@@ -33,7 +33,7 @@ class file_reader():
         iter_cnt = 0
         test_name_list = ['orb']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
         top5, cnt = {}, {}
-        scorebox = 1
+        scorebox = 1  # True로 줄 스코어값들.
         for target_name in os.listdir(path):
             # 파일 확장자가 (properties)인 것만 처리
             if target_name.endswith("png"):
@@ -45,7 +45,6 @@ class file_reader():
                 for test_name in test_name_list:
                     top5[test_name] = np.zeros((scorebox, 2))
                     cnt[test_name] = {'T': 0, 'F': 0}
-                # top5_surf, top5_sift, top5_orb, top5_akaze, top5_fast = np.zeros((1, 2)), np.zeros((1, 2)), np.zeros((1, 2)), np.zeros((1, 2)), np.zeros((1, 2))
 
                 for data_name in os.listdir(data_path):
                     data_number = int(data_name.split('_')[0])
@@ -53,11 +52,11 @@ class file_reader():
                         for test_name in test_name_list:
                             res = self.descriptor.featureMatching(path + target_name, data_path + data_name,
                                                                   test_name=test_name, target_num=data_number)
-                            if self.top5_check(top5[test_name], res):
+                            if self.top_score_check(top5[test_name], res):
                                 top5[test_name][np.argmin(top5[test_name][:, 1])] = np.array([data_number, res])
 
                 for test_name in test_name_list:
-                    if self.top5_Classifier(top5[test_name], target_number):
+                    if self.score_Classifier(top5[test_name], target_number):
                         cnt[test_name]['T'] += 1
                     else:
                         cnt[test_name]['F'] += 1
@@ -78,6 +77,6 @@ class file_reader():
                                                                                iter_cnt))
 
 
-def __main__():
+if __name__ == "__main__":
     test = file_reader()
     test.read_txt()

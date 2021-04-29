@@ -18,7 +18,7 @@ class file_reader():
         if label in top5[:, 0]:
             print('case1 = true')
             return True
-        for i in range(0, 2):  # 트루로 줄 앵글 범위.
+        for i in range(0, 5):  # 트루로 줄 앵글 범위.
             if (label + i) > 276:
                 if (label + i) - 276 in top5[:, 0]: return True
             if (label - i) < 0:
@@ -33,6 +33,9 @@ class file_reader():
         iter_cnt = 0
         test_name_list = ['orb']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
         top5, cnt = {}, {}
+        # cnt 초기화
+        for test_name in test_name_list:
+            cnt[test_name] = {'T': 0, 'F': 0}
         scorebox = 1  # True로 줄 스코어값들.
         for target_name in os.listdir(path):
             # 파일 확장자가 (properties)인 것만 처리
@@ -44,7 +47,6 @@ class file_reader():
                 # Top5 초기화
                 for test_name in test_name_list:
                     top5[test_name] = np.zeros((scorebox, 2))
-                    cnt[test_name] = {'T': 0, 'F': 0}
 
                 for data_name in os.listdir(data_path):
                     data_number = int(data_name.split('_')[0])

@@ -1,9 +1,11 @@
 import test_descriptor
 import os
 import numpy as np
+from tqdm import tqdm, trange
+
 import cv2
 
-
+len_dataset = 276
 class file_reader():
     def __init__(self):
         self.descriptor = test_descriptor.test_desciptor()
@@ -13,31 +15,31 @@ class file_reader():
             if val < score: return True
         return False
 
-    def score_Classifier(self, top5, label):
-        print(label, 'top 5: ', top5[:, 0])
-        if label in top5[:, 0]:
-            print('case1 = true')
+    def score_Classifier(self, candidates, label):
+        # print(label, 'top 5: ', top5[:, 0])
+        if label in candidates[:, 0]:
+            # print('case1 = true')
             return True
         for i in range(0, 5):  # 트루로 줄 앵글 범위.
-            if (label + i) > 276:
-                if (label + i) - 276 in top5[:, 0]: return True
+            if (label + i) > len_dataset:
+                if (label + i) - len_dataset in candidates[:, 0]: return True
             if (label - i) < 0:
-                if (label - i) + 276 in top5[:, 0]: return True
-            if (label - i) in top5[:, 0]: return True
-            if (label + i) in top5[:, 0]: return True
+                if (label - i) + len_dataset in candidates[:, 0]: return True
+            if (label - i) in candidates[:, 0]: return True
+            if (label + i) in candidates[:, 0]: return True
         return False
 
-    def read_txt(self):
+    def read_txt(self, top_size):
         path = 'E:/Etri/_images/'
         data_path = 'E:/Etri/Euler/'
         iter_cnt = 0
-        test_name_list = ['orb']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
+        test_name_list = ['orb', 'sift', 'surf', 'AKAZE', 'fast']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
         top5, cnt = {}, {}
         # cnt 초기화
         for test_name in test_name_list:
             cnt[test_name] = {'T': 0, 'F': 0}
-        scorebox = 1  # True로 줄 스코어값들.
-        for target_name in os.listdir(path):
+        print("matching with Top ", top_size)
+        for target_name in (os.listdir(path)):
             # 파일 확장자가 (properties)인 것만 처리
             if target_name.endswith("png"):
                 target_number = int(target_name.split('_')[1][0:3])
@@ -46,9 +48,9 @@ class file_reader():
 
                 # Top5 초기화
                 for test_name in test_name_list:
-                    top5[test_name] = np.zeros((scorebox, 2))
+                    top5[test_name] = np.zeros((top_size, 2))
 
-                for data_name in os.listdir(data_path):
+                for data_name in tqdm(os.listdir(data_path)):
                     data_number = int(data_name.split('_')[0])
                     if data_name.endswith("png"):
                         for test_name in test_name_list:
@@ -81,4 +83,5 @@ class file_reader():
 
 if __name__ == "__main__":
     test = file_reader()
-    test.read_txt()
+    test.read_txt(top_size=1)
+    test.read_txt(top_size=5)

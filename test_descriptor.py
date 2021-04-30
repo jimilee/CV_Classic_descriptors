@@ -3,25 +3,23 @@ import cv2
 
 class test_desciptor():
     def __init__(self):
-        self.sift = cv2.xfeatures2d.SIFT_create(nfeatures =1000)
-        self.surf = cv2.xfeatures2d.SURF_create(1000)
+        self.sift = cv2.xfeatures2d.SIFT_create(nfeatures =500)
+        self.surf = cv2.xfeatures2d.SURF_create(500)
         self.AKAZE = cv2.AKAZE_create()
         self.fast = cv2.FastFeatureDetector_create()
-        self.orb = cv2.ORB_create(nfeatures =1000)
+        self.orb = cv2.ORB_create(nfeatures =500)
         self.br = cv2.BRISK_create()
         self.matcher = None
         self.th_score = 0
         self.search = dict(checks = 128)
 
-
-
     def make_kp(self, img, d_name = None):#각 디스크립터별 세부사항 세팅
         kp, des = None, None
         if d_name == 'sift':
-            kp = self.sift.detectAndCompute(img, None)
-            index = dict(algorithm=0, trees = 5)
+            kp, des = self.sift.detectAndCompute(img, None)
+            index = dict(algorithm=0, trees=5)
             # self.matcher = cv2.BFMatcher()
-            self.matcher = cv2.FlannBasedMatcher(index, self.search) #cv2.NORM_L2, crossCheck = False cv2.NORM_L2, crossCheck = False
+            self.matcher = cv2.FlannBasedMatcher(index,self.search)  # cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
             self.th_score = 300
 
         elif d_name == 'AKAZE':
@@ -49,7 +47,7 @@ class test_desciptor():
             index = dict(algorithm=6, table_number=5, key_size=10, multi_probe_level=1)
             self.matcher = cv2.FlannBasedMatcher(index, self.search)
             self.th_score = 70
-        if kp is None or des is None: print('오류.')
+        if kp is None or des is None: print(d_name)
         return kp, des
 
     def kp_matcher(self, matcher, des1, des2, d_name = None): #각 디스크립터별 매칭방식 세팅

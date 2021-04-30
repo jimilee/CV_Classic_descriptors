@@ -39,18 +39,18 @@ class file_reader():
         for test_name in test_name_list:
             cnt[test_name] = {'T': 0, 'F': 0}
         print("matching with Top ", top_size)
-        for target_name in (os.listdir(path)):
+        for target_name in tqdm(os.listdir(path)):
             # 파일 확장자가 (properties)인 것만 처리
             if target_name.endswith("png"):
                 target_number = int(target_name.split('_')[1][0:3])
                 iter_cnt += 1
-                print("matching target number : ", target_number)
+                # print("matching target number : ", target_number)
 
                 # Top5 초기화
                 for test_name in test_name_list:
                     top5[test_name] = np.zeros((top_size, 2))
 
-                for data_name in tqdm(os.listdir(data_path)):
+                for data_name in (os.listdir(data_path)):
                     data_number = int(data_name.split('_')[0])
                     if data_name.endswith("png"):
                         for test_name in test_name_list:

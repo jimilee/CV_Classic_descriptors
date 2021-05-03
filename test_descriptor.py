@@ -18,8 +18,8 @@ class test_desciptor():
         if d_name == 'sift':
             kp, des = self.sift.detectAndCompute(img, None)
             index = dict(algorithm=0, trees=5)
-            # self.matcher = cv2.BFMatcher()
-            self.matcher = cv2.FlannBasedMatcher(index,self.search)  # cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
+            self.matcher = cv2.BFMatcher()
+            #self.matcher = cv2.FlannBasedMatcher(index,self.search)  # cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
             self.th_score = 300
 
         elif d_name == 'AKAZE':
@@ -31,8 +31,9 @@ class test_desciptor():
         elif d_name == 'fast':
             kp = self.fast.detect(img, None)
             kp, des = self.br.compute(img, kp)
-            self.matcher = cv2.BFMatcher()
-            #self.matcher = cv2.FlannBasedMatcher(index, self.search)  #cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
+            index = dict(algorithm=0, trees=5)
+            #self.matcher = cv2.BFMatcher()
+            self.matcher = cv2.FlannBasedMatcher(index, self.search)  #cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
             self.th_score = 300
 
         elif d_name == 'surf':

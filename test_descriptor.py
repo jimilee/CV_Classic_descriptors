@@ -25,7 +25,8 @@ class test_desciptor():
         elif d_name == 'AKAZE':
             kp, des =self.AKAZE.detectAndCompute(img, None)
             index = dict(algorithm=6, table_number=5, key_size=10, multi_probe_level=1)
-            self.matcher = cv2.FlannBasedMatcher(index, self.search)
+            #self.matcher = cv2.FlannBasedMatcher(index, self.search)
+            self.matcher = cv2.BFMatcher()
             self.th_score = 50
 
         elif d_name == 'fast':
@@ -39,14 +40,15 @@ class test_desciptor():
         elif d_name == 'surf':
             kp, des = self.sift.detectAndCompute(img, None)
             index = dict(algorithm=0, trees=5)
-            #self.matcher = cv2.BFMatcher()
-            self.matcher = cv2.FlannBasedMatcher(index, self.search)  #cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
+            self.matcher = cv2.BFMatcher()
+            #self.matcher = cv2.FlannBasedMatcher(index, self.search)  #cv2.NORM_L1, crossCheck = Falsecv2.NORM_L2, crossCheck = True
             self.th_score = 300
 
         elif d_name == 'orb':
             kp, des = self.orb.detectAndCompute(img, None)
             index = dict(algorithm=6, table_number=5, key_size=10, multi_probe_level=1)
-            self.matcher = cv2.FlannBasedMatcher(index, self.search)
+            self.matcher = cv2.BFMatcher()
+            #self.matcher = cv2.FlannBasedMatcher(index, self.search)
             self.th_score = 70
         if kp is None or des is None: print(d_name)
         return kp, des

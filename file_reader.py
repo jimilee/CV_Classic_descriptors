@@ -65,13 +65,13 @@ class file_reader():
                     else:
                         cnt[test_name]['F'] += 1
 
-                    if iter_cnt % 10 == 0:
-                        print(
-                            '==== Term ACC[{0}] : {1}, T: {2}, F: {3}, Total: {4}'.format(test_name,
-                                                                                          cnt[test_name]['T'] / (cnt[test_name]['T']+cnt[test_name]['F']),
-                                                                                          cnt[test_name]['T'],
-                                                                                          cnt[test_name]['F'],
-                                                                                          iter_cnt))
+                    # if iter_cnt % 10 == 0:
+                    #     print(
+                    #         '==== Term ACC[{0}] : {1}, T: {2}, F: {3}, Total: {4}'.format(test_name,
+                    #                                                                       cnt[test_name]['T'] / (cnt[test_name]['T']+cnt[test_name]['F']),
+                    #                                                                       cnt[test_name]['T'],
+                    #                                                                       cnt[test_name]['F'],
+                    #                                                                       iter_cnt))
 
         for test_name in test_name_list:
             print('Result ACC[{0}] : {1}, T: {2}, F: {3}, Total: {4}. '.format(test_name,
@@ -84,4 +84,4 @@ class file_reader():
 if __name__ == "__main__":
     test = file_reader()
     test.read_txt(top_size=1)
-    test.read_txt(top_size=5)
+    # test.read_txt(top_size=5)

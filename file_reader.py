@@ -20,7 +20,7 @@ class file_reader():
         if label in candidates[:, 0]:
             # print('case1 = true')
             return True
-        for i in range(0, 5):  # 트루로 줄 앵글 범위.
+        for i in range(0, 3):  # 트루로 줄 앵글 범위.
             if (label + i) > len_dataset:
                 if (label + i) - len_dataset in candidates[:, 0]: return True
             if (label - i) < 0:
@@ -33,7 +33,7 @@ class file_reader():
         path = 'E:/Etri/_images/'
         data_path = 'E:/Etri/Euler/'
         iter_cnt = 0
-        test_name_list = ['orb', 'sift', 'surf', 'AKAZE', 'fast']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
+        test_name_list = ['AKAZE', 'orb','surf', 'sift', 'fast']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
         top5, cnt = {}, {}
         # cnt 초기화
         for test_name in test_name_list:
@@ -83,5 +83,4 @@ class file_reader():
 
 if __name__ == "__main__":
     test = file_reader()
-    test.read_txt(top_size=1)
-    # test.read_txt(top_size=5)
+    test.read_txt(top_size=3)

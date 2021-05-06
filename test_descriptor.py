@@ -133,10 +133,15 @@ class test_desciptor():
     def featureMatching(self, img1_path, img2_path, test_name, target_num=0, show_img = False, local_matching = False):
         src1 = cv2.imread(img1_path, cv2.IMREAD_GRAYSCALE)
         src2 = cv2.imread(img2_path, cv2.IMREAD_GRAYSCALE)
-        croped = src2[130:src1.shape[0]-130, 270:src1.shape[1]-270].copy()
 
-        img1 = cv2.resize(src1, (640, 480))
-        img2 = cv2.resize(croped, (640, 480))
+        if not local_matching:
+            croped = src2[130:src1.shape[0]-130, 270:src1.shape[1]-270].copy()
+
+            img1 = cv2.resize(src1, (640, 480))
+            img2 = cv2.resize(croped, (640, 480))
+        else:
+            img1 = src1
+            img2 = src2
         # img1 = cv2.blur(rsize1, ksize=(k_size, k_size))
         # img2 = cv2.blur(rsize2, ksize=(k_size, k_size))
         #윈도우 슬라이싱 매칭 사이즈.

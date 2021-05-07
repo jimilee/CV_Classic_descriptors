@@ -15,12 +15,12 @@ class file_reader():
             if val < score: return True
         return False
 
-    def score_Classifier(self, candidates, label):
+    def score_Classifier(self, candidates, label, margin):
         # print(label, 'top 5: ', top5[:, 0])
         if label in candidates[:, 0]:
             # print('case1 = true')
             return True
-        for i in range(0, 3):  # 트루로 줄 앵글 범위.
+        for i in range(0, margin):  # 트루로 줄 앵글 범위.
             if (label + i) > len_dataset:
                 if (label + i) - len_dataset in candidates[:, 0]: return True
             if (label - i) < 0:
@@ -29,7 +29,7 @@ class file_reader():
             if (label + i) in candidates[:, 0]: return True
         return False
 
-    def read_txt(self, top_size):
+    def read_txt(self, top_size, margin):
         path = 'E:/Etri/_images/'
         data_path = 'E:/Etri/Euler/'
         iter_cnt = 0
@@ -38,7 +38,7 @@ class file_reader():
         # cnt 초기화
         for test_name in test_name_list:
             cnt[test_name] = {'T': 0, 'F': 0}
-        print("matching with Top ", top_size)
+        print("matching with Top : ", top_size, "\tMargin : ", margin)
         for target_name in tqdm(os.listdir(path)):
             # 파일 확장자가 (properties)인 것만 처리
             if target_name.endswith("png"):
@@ -60,7 +60,7 @@ class file_reader():
                                 top5[test_name][np.argmin(top5[test_name][:, 1])] = np.array([data_number, res])
 
                 for test_name in test_name_list:
-                    if self.score_Classifier(top5[test_name], target_number):
+                    if self.score_Classifier(top5[test_name], target_number, margin):
                         cnt[test_name]['T'] += 1
                     else:
                         cnt[test_name]['F'] += 1
@@ -83,4 +83,7 @@ class file_reader():
 
 if __name__ == "__main__":
     test = file_reader()
-    test.read_txt(top_size=3)
+    test.read_txt(top_size=3, margin=5)
+    test.read_txt(top_size=3, margin=1)
+    test.read_txt(top_size=1, margin=1)
+    test.read_txt(top_size=5, margin=1)

@@ -33,7 +33,7 @@ class file_reader():
         path = 'E:/Etri/_images/'
         data_path = 'E:/Etri/Euler/'
         iter_cnt = 0
-        test_name_list = ['AKAZE', 'orb','surf', 'sift', 'fast']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
+        test_name_list = ['AKAZE', 'sift']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
         top5, cnt = {}, {}
         # cnt 초기화
         for test_name in test_name_list:
@@ -83,7 +83,16 @@ class file_reader():
 
 if __name__ == "__main__":
     test = file_reader()
-    test.read_txt(top_size=3, margin=5)
-    test.read_txt(top_size=3, margin=1)
-    test.read_txt(top_size=1, margin=1)
-    test.read_txt(top_size=5, margin=1)
+    test.read_txt(top_size=8, margin=5)
+    test.read_txt(top_size=8, margin=3)
+    test.read_txt(top_size=8, margin=1)
+    test.read_txt(top_size=10, margin=5)
+    test.read_txt(top_size=10, margin=3)
+    test.read_txt(top_size=10, margin=1)
+    test.read_txt(top_size=13, margin=5)
+    test.read_txt(top_size=13, margin=3)
+    test.read_txt(top_size=13, margin=1)
+    test.read_txt(top_size=15, margin=5)
+    test.read_txt(top_size=15, margin=3)
+    test.read_txt(top_size=15, margin=1)
+

@@ -194,4 +194,4 @@ class test_desciptor():
 
 if __name__ == "__main__":
     descriptor = test_desciptor()
-    # descriptor.featureMatching('homo_000.png','image_000.png', 'fast', show_img=True, local_matching=True)
+    descriptor.featureMatching('homo_000.png','image_000.png', 'fast', show_img=True, local_matching=True)

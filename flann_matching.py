@@ -1,6 +1,6 @@
 import cv2, numpy as np
 import os
-
+#미라선배 코드.
 def get_testdata(detector, folder_path = './DB/_images/', resize_w=0, resize_h=0):
     input_imgs_kps = []
     input_imgs_descs = []

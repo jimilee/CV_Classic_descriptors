@@ -1,11 +1,10 @@
 import test_descriptor
 import os
 import numpy as np
-from tqdm import tqdm, trange
-
-import cv2
+from tqdm import tqdm
 
 len_dataset = 276
+# 전역 기술자 매칭 알고리즘
 class file_reader():
     def __init__(self):
         self.descriptor = test_descriptor.test_desciptor()
@@ -29,11 +28,12 @@ class file_reader():
             if (label + i) in candidates[:, 0]: return True
         return False
 
-    def read_txt(self, top_size, margin):
+    #이미지가 들어있는 폴더들을 읽어옴
+    def read_folder(self, top_size, margin):
         path = 'E:/Etri/_images/'
         data_path = 'E:/Etri/Euler/'
         iter_cnt = 0
-        test_name_list = ['AKAZE', 'sift']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'
+        test_name_list = ['orb', 'sift', 'surf', 'AKAZE', 'fast']  # 'orb', 'sift', 'surf', 'AKAZE', 'fast'  << 테스트할 디스크립터 이름들.
         top5, cnt = {}, {}
         # cnt 초기화
         for test_name in test_name_list:
@@ -65,14 +65,6 @@ class file_reader():
                     else:
                         cnt[test_name]['F'] += 1
 
-                    # if iter_cnt % 10 == 0:
-                    #     print(
-                    #         '==== Term ACC[{0}] : {1}, T: {2}, F: {3}, Total: {4}'.format(test_name,
-                    #                                                                       cnt[test_name]['T'] / (cnt[test_name]['T']+cnt[test_name]['F']),
-                    #                                                                       cnt[test_name]['T'],
-                    #                                                                       cnt[test_name]['F'],
-                    #                                                                       iter_cnt))
-
         for test_name in test_name_list:
             print('Result ACC[{0}] : {1}, T: {2}, F: {3}, Total: {4}. '.format(test_name,
                                                                                cnt[test_name]['T'] / (cnt[test_name]['T']+cnt[test_name]['F']),
@@ -83,16 +75,6 @@ class file_reader():
 
 if __name__ == "__main__":
     test = file_reader()
-    test.read_txt(top_size=8, margin=5)
-    test.read_txt(top_size=8, margin=3)
-    test.read_txt(top_size=8, margin=1)
-    test.read_txt(top_size=10, margin=5)
-    test.read_txt(top_size=10, margin=3)
-    test.read_txt(top_size=10, margin=1)
-    test.read_txt(top_size=13, margin=5)
-    test.read_txt(top_size=13, margin=3)
-    test.read_txt(top_size=13, margin=1)
-    test.read_txt(top_size=15, margin=5)
-    test.read_txt(top_size=15, margin=3)
-    test.read_txt(top_size=15, margin=1)
+    test.read_folder(top_size=8, margin=5)
+
 

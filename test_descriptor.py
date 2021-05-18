@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 
+# 지역 기술자 매칭 알고리즘 및 전역 기술자 평가 코드
 class test_desciptor():
     def __init__(self):
         self.sift = cv2.xfeatures2d.SIFT_create(nfeatures =300) #nfeatures =500
@@ -13,7 +14,8 @@ class test_desciptor():
         self.th_score = 0
         self.search = dict(checks = 128)
 
-    def make_kp(self, img, d_name = None):#각 디스크립터별 세부사항 세팅
+    # 각 디스크립터별 세부사항 세팅, matcher 방식 선택. BFMatcher 및 FlannBasedMatcher
+    def make_kp(self, img, d_name = None):
         kp, des = None, None
         if d_name == 'sift':
             kp, des = self.sift.detectAndCompute(img, None)
@@ -53,7 +55,8 @@ class test_desciptor():
         if kp is None or des is None: print(d_name)
         return kp, des
 
-    def compute_repeatability(self, kp1, kp2, th=3):#키포인트가 두 이미지에서 동일한 위치에 나오는지 확인
+    # 키포인트가 두 이미지에서 동일한 위치에 나오는지 확인
+    def compute_repeatability(self, kp1, kp2, th=3):
         kp1 = cv2.KeyPoint_convert(kp1)
         kp2 = cv2.KeyPoint_convert(kp2)
         repeatability = 0
@@ -70,7 +73,8 @@ class test_desciptor():
             repeatability = (cnt1 + cnt2) / (N1 + N2)
         return repeatability
 
-    def compute_mma(self, kp1, kp2, good, th=3):#키포인트가 두 이미지에서 실제 매칭된 위치가 맞는지
+    # 키포인트가 두 이미지에서 실제 매칭된 위치가 맞는지
+    def compute_mma(self, kp1, kp2, good, th=3):
         kp1 = cv2.KeyPoint_convert(kp1)
         kp2 = cv2.KeyPoint_convert(kp2)
 
@@ -87,7 +91,8 @@ class test_desciptor():
             matching_score = match_n / len(norm)
         return matching_score
 
-    def kp_matcher(self, matcher, des1, des2, d_name = None): #각 디스크립터별 매칭방식 세팅
+    # 각 디스크립터별 매칭방식 세팅
+    def kp_matcher(self, matcher, des1, des2, d_name = None):
         good, matches = [],[]
         if d_name == 'sift':
             try:
@@ -130,6 +135,7 @@ class test_desciptor():
 
         return good, matches
 
+    # 특징 디스크립터를 이용한 매칭 알고리즘
     def featureMatching(self, img1_path, img2_path, test_name, target_num=0, show_img = False, local_matching = False):
         src1 = cv2.imread(img1_path, cv2.IMREAD_GRAYSCALE)
         src2 = cv2.imread(img2_path, cv2.IMREAD_GRAYSCALE)
@@ -142,8 +148,7 @@ class test_desciptor():
         else:
             img1 = src1
             img2 = src2
-        # img1 = cv2.blur(rsize1, ksize=(k_size, k_size))
-        # img2 = cv2.blur(rsize2, ksize=(k_size, k_size))
+
         #윈도우 슬라이싱 매칭 사이즈.
         img_h, img_w = img1.shape
 
@@ -165,8 +170,7 @@ class test_desciptor():
 
                 good, matches = self.kp_matcher(self.matcher, des1, des2, test_name)
                 if local_matching and not show_img:
-                    # print('compute_repeatability.', self.compute_repeatability(kp1, kp2))
-                    # print('compute_mma.', self.compute_mma(kp1, kp2, good))
+
                     return self.compute_mma(kp1, kp2, good), self.compute_repeatability(kp1, kp2)
 
                 if len(good) == 0: continue
@@ -174,29 +178,20 @@ class test_desciptor():
                 if show_img:
                     res = cv2.drawMatches(croped1, kp1, croped2, kp2, good, None, flags=cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
                     cv2.imshow(test_name, res)
-                    # cv2.imshow('res2', croped2)
                     cv2.waitKey()
                     cv2.destroyWindow(test_name)
-                    # cv2.destroyWindow('res2')
                     print(target_num,' : ', test_name, '/ ', len(good) / len(matches),
                           'good : {0} / {1}.'.format(len(good), len(matches)))
-
+                    print('compute_repeatability.', self.compute_repeatability(kp1, kp2))
+                    print('compute_mma.', self.compute_mma(kp1, kp2, good))
                 total_good+=len(good)
                 total_matches+=len(matches)
-                # print(test_name, '/ ',len(good) / len(matches), 'good : {0} / {1}.'.format(len(good), len(matches)))
 
 
         if total_matches == 0 : return 0.
         return (total_good/total_matches)*100
 
-# descriptor = test_desciptor()
-# #
-# descriptor.featureMatching('homo_000.png','image_000.png', 'fast', show_img=True, local_matching=True)
-# descriptor.featureMatching('homo_000.png','image_000.png', 'orb', show_img=True, local_matching=True)
-# descriptor.featureMatching('homo_000.png','image_000.png', 'sift', show_img=True, local_matching=True)
-# descriptor.featureMatching('homo_000.png','image_000.png', 'surf', show_img=True, local_matching=True)
-# descriptor.featureMatching('homo_000.png','image_000.png', 'AKAZE', show_img=True, local_matching=True)
-# descriptor.featureMatching('test1.png','test2.png', 'orb', show_img=True, local_matching=True)
-# descriptor.featureMatching('test1.png','test2.png', 'sift', show_img=True, local_matching=True)
-# descriptor.featureMatching('test1.png','test2.png', 'surf', show_img=True, local_matching=True)
-# cv2.destroyWindow()
+
+if __name__ == "__main__":
+    descriptor = test_desciptor()
+    # descriptor.featureMatching('homo_000.png','image_000.png', 'fast', show_img=True, local_matching=True)
